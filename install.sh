@@ -13,6 +13,9 @@ apt-get install libmysqlclient18
 apt-get install -y zabbix-server-mysql
 apt-get install -y zabbix-frontend-php
 apt-get install -y zabbix-agent
+sed -i 's/# php_value date.timezone/php_value date.timezone/' /etc/apache2/conf-enabled/zabbix.conf
+mysql -uroot -e "create database zabbix character set utf8 collate utf8_bin"
+mysql -uroot -e "grant all privileges on zabbix.* to zabbix@localhost identified by 'zabbix'"
 cd /usr/share/doc/zabbix-server-mysql
 zcat create.sql.gz|mysql -uroot zabbix
 service apache2 restart
