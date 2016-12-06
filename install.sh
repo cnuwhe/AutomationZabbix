@@ -1,15 +1,19 @@
-#! bin/sh
+
 wget http://repo.zabbix.com/zabbix/3.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_3.0-1+trusty_all.deb
 dpkg -i zabbix-release_3.0-1+trusty_all.deb
+echo 'deb http://security.ubuntu.com/ubuntu precise-security main'>>/etc/apt/sources.list
 apt-get update
-apt-get install -y zabbix-server-mysql 
-apt-get install zabbix-frontend-php
-apt-get install zabbix-agent
+apt-get install -y apache2
+apt-get install -y php7
+apt-get install -y php-xml
+apt-get install -y php-mbstring
+apt-get install -y php-bcmath
+apt-get install -y mysql-server
+apt-get install libmysqlclient18
+apt-get install -y zabbix-server-mysql
+apt-get install -y zabbix-frontend-php
+apt-get install -y zabbix-agent
 cd /usr/share/doc/zabbix-server-mysql
-zcat create.sql.gz | mysql -uroot zabbix
-# vi /etc/zabbix/zabbix_server.conf
-#DBHost=localhost
-#DBName=zabbix
-#DBUser=zabbix
-#DBPassword=zabbix
+zcat create.sql.gz|mysql -uroot zabbix
+service apache2 restart
 service zabbix-server start
