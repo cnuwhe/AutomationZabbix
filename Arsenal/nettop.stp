@@ -1,0 +1,39 @@
+#!/usr/bin/stap
+
+global ifxmit, ifrecv
+global ifmerged
+probe netdev.receive
+{
+ifrecv[pid(),execname()] <<< length
+}
+probe netdev.transmit
+{
+ifxmit[pid(),execname()]<<<length
+}
+
+
+
+function print_activity()
+{
+foreach ([pid,exec] in ifrecv) {
+ifmerged[pid,exec] += @count(ifrecv[pid,exec]);
+}
+foreach ([pid,exec] in ifxmit) {
+ifmerged[pid,exec] += @count(ifxmit[pid,exec]);
+}
+foreach ([pid,exec] in ifmerged-) {
+n_recv = @count(ifxmit[pid,exec])
+printf("%d-%s-%d\n",pid,exec,
+n_recv ? @sum(ifxmit[pid,exec])/1024 : 0)
+}
+
+delete ifxmit
+delete ifrecv
+delete ifmerged
+}
+
+probe timer.s(10)
+{
+print_activity()
+exit()
+}
