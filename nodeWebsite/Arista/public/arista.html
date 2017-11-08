@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="#">
+        <title>Arista</title>
+<body>
+	<!-- 这个是jquery的CDN引用,本地的不会 -->
+<script
+  src="http://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+  <!-- 这个是highchart的引用,要不然用不了,怎么用,我也不会,看官方说明 -->
+<script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="chart.js"></script>
+<!-- <link href="musec.css" rel="stylesheet" type="text/css"> -->
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="justified-nav.css" rel="stylesheet">
+
+ <div class="container">
+
+      <div class="masthead">
+        <h3 class="text-muted"><div style="text-transform: uppercase;">Arista</div></h3>
+      </div>
+
+
+      <div class="row">
+	<div class="col-lg-6">
+
+<p>Arista Networks 从创建伊始就为大型数据中心存储和计算环境开创并提供软件驱动的云网络解决方案。 Arista 屡获奖项的平台，具有从每秒 10 到 100 千兆位的以太网速度，重新定义了扩展性、敏捷性和弹性。 Arista 已通过 CloudVision 和 EOS 的高级网络操作系统在全球交付超过五百万个云网络端口。 Arista 作为 25/50GbE 以太网联合会的创始成员，一直坚持采用开源标准。 Arista Networks 产品在全球可直接或通过合作伙伴获得。
+</p>
+<p>Arista 平台的核心是可扩展操作系统 (EOS™)。它是一种开创性的网络操作系统，能够在多个硬件平台之间实现单一映像一致性，并通过现代化的核心架构实现不中断服务升级和应用扩展。</p>
+	</div>
+
+      <div class="col-lg-6">
+
+      <form id="thetable">
+      <input type="hidden" name="pf" value="rid">
+
+      <table class="table" width="100%" >
+      <tbody>
+      <tr><td width="50%">
+	选择显示的信息
+      </td><td width="50%">
+      <select name="selected" id="selected" >
+  <option value="null" >请选择</option>
+  <option value="CPU">CPU</option>
+  <option value="Memory">Memory</option>
+  <option value="login">login</option>
+</select>
+      </td></tr>
+      </select>
+      </td></tr>
+      </tbody></table>
+      <br/>
+
+      <div style="width: 200px; margin:0 auto; ">
+      <button type="button" class="btn btn-primary"  onclick="submitinfo()" >确定</button> 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="reset" class="btn btn-danger" name="reset" value="Clear">
+
+      <input type="" id="show" value="">
+      </div>
+      </form>
+
+        </div>
+
+      </div>
+      <div id="chartcontainer" style="min-width:400px;height:400px;"></div>
+
+
+      <!-- Site footer -->
+      <footer class="footer">
+<!--
+        <p>© 清华大学 2017</p>
+-->
+        <p>© 2017</p>
+      </footer>
+
+    </div> 
+
+
+</form>
+
+</body>
+</html>
+
+
+

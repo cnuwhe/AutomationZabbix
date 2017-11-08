@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="refresh" content="10">   
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="#">
+        <title>AiAttack</title>
+<body>
+	<!-- 这个是jquery的CDN引用,本地的不会 -->
+<script
+  src="http://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+  <!-- 这个是highchart的引用,要不然用不了,怎么用,我也不会,看官方说明 -->
+<script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+<script type="text/javascript" >
+function objToArrays(obj)
+{
+  var res=[]
+  for (var each in obj)
+  {
+  	res.push([obj[each].clock*1000,obj[each].value])
+  }
+  return res
+}
+
+  $.get("/AI", {}, function(data) {
+  data=JSON.parse(data)
+  var chart= new Highcharts.Chart('chartcontainer', {          
+  chart: {type: 'line',zoomType: 'x'},
+   //指定图表的类型，默认是折线图（line）X轴可以放大
+  title: { text: "CPU-idle time"}, //指定图表标题
+  xAxis:{
+    type: 'datetime',
+    title: {text: null}
+    }, //这里是X轴的标记
+  yAxis: {
+      title: {text: 'value(%)' }  //指定y轴的标题
+      },
+  series: [//图中的数值
+    {name:"CPU-idle(%)",
+    data:  objToArrays(data) 
+    }
+    ]
+  });
+});
+</script>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="justified-nav.css" rel="stylesheet">
+   <div id="chartcontainer" style="width: 90%;height: 40%;"></div>
+</body>
+</html>
+
+
+
