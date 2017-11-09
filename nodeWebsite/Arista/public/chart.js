@@ -1,22 +1,25 @@
 function RawdataToCount(data){
   var date=new Date()
   var map=[new Map(),new Map()]
+  var firstdate
   for (var j=0;j<data.length;j++)
     {
     var datas=data[j].value.split('\n')
     datas=datas.slice(0,-2)
     for (var i=0;i<datas.length;i++){
     var time=datas[i].split("-")[0].substring(38)+date.getFullYear()
-
     var mydate=new Date(time).toLocaleString('chinese',{hour12:false})
-    console.log(mydate)
     mydate=localeToUTC(mydate)
+    if (i==0&&j==0)firstdate=mydate
     if(!map[j].has(mydate)){
       map[j].set(mydate,0)
     }
     map[j].set(mydate,map[j].get(mydate)+1)
-   } 
+   }
     }
+  map[0].set(firstdate+86400,0)
+  map[0].set(localeToUTC(new Date().toLocaleString('chinese',{hour12:false})),0)
+  
   return map
 }
 
@@ -104,7 +107,7 @@ function localeToUTC(data)
   var hour=time.split(':')[0]
   var mintus=time.split(':')[1]
   var second=time.split(':')[2]
-  return Date.UTC(year,month,day,hour,mintus,second)
+  return Date.UTC(year,month,day)
 }
 
 function objToArrays(obj)
