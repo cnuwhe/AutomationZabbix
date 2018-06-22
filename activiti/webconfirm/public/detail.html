@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="#">
+        <title>Dirtycow-WebConfirm</title>
+<body>
+	<!-- 这个是jquery的本地引用 -->
+<script src="jquery.js"></script>
+<!-- <link href="musec.css" rel="stylesheet" type="text/css"> -->
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="justified-nav.css" rel="stylesheet">
+
+ <div class="container">
+
+      <div class="masthead">
+        <h3 class="text-muted"><div style="text-transform: uppercase;">关键文件发生内容变化</div></h3>
+      </div>
+
+
+      <div class="row">
+	<div class="col-lg-6">
+
+<p>我们检测到该主机有关键文件内容变化
+</p>
+<p>如果选择授权活动则会对文件进行恢复，并开始检测dirtycow安全漏洞。如果选择否定授权则结束工作流。</p>
+	</div>
+
+      <div class="col-lg-6">
+
+
+      <div style="width: 200px; margin:0 auto; ">
+      <button type="button" class="btn btn-primary"  onclick="sendconfirm(1)" >确定授权</button> 
+      <button type="reset" class="btn btn-danger" onclick="sendconfirm(0)" >否定授权</button>
+      <button type="button" class="btn btn-primary"  onclick="submitinfo()" >web shell</button>
+      <button type="button" class="btn btn-primary"  onclick="submitinfo()" >LEP</button> 
+      </div>
+
+      </div>
+      <div id="chartcontainer" style="min-width:400px;height:400px;"></div>
+
+
+      <!-- Site footer -->
+      <footer class="footer">
+<!--
+        <p>© 清华大学 2017</p>
+-->
+        <p>© 2017</p>
+      </footer>
+
+    </div> 
+
+
+</form>
+
+</body>
+</html>
+<script type="text/javascript">
+  function sendconfirm(status){
+  // console.log(stat)
+  $.ajax({  
+    url:"/sendconfirm",  
+    type:"get",  
+    data:{"status":status},  
+    cache: false,  
+    // processData一定是true，这样后台才能获取data
+    processData: true,  
+    contentType: false,  
+    success:function(){alert("success");},  
+    error:function(e){  alert("网络错误，请重试！！");  }  
+    });  
+  }
+</script> 
+
+

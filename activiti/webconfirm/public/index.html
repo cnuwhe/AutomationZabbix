@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="#">
+        <title>标题没想好系列</title>
+<body>
+  <!-- 本地使用jQuery -->
+<script src="jquery.js"></script>
+<!-- <link href="musec.css" rel="stylesheet" type="text/css"> -->
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="justified-nav.css" rel="stylesheet">
+
+ <div class="container">
+
+      <div class="masthead">
+        <h3 class="text-muted"><div style="text-transform: uppercase;">welcome page</div></h3>
+      </div>
+      <div class="row">
+	<div class="col-lg-6"></div>
+
+      <div class="col-lg-6">
+<!-- action是推送到后台的某个地址 -->
+      <form id="thetable" action="/todetail" >
+      <input type="hidden" name="pf" value="rid">
+
+      <table class="table" width="100%" >
+      <tbody>
+      <tr><td width="50%">问题列表</td>
+          <td width="50%">
+              <select name="problems" id="problems">
+                <option value="null" >请选择</option></select>
+            </td></tr>
+      <tr><td width="50%">主机</td>
+          <td width="50%">
+              <select name="hosts" id="hosts"  >
+                <option value="null" >请选择</option></select>
+            </td></tr>      </select>
+      </td></tr>
+      </tbody>
+      </table>
+      <br/>
+      <div style="width: 200px; margin:0 auto; ">
+        <!-- onclick提交表单中的所有的信息 -->
+      <button type="button" class="btn btn-primary"  onclick="$('#thetable').submit()" >确定</button> 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="reset" class="btn btn-danger" name="reset" value="Clear">
+      </div>
+      </form>
+
+        </div>
+
+      </div>
+
+
+      <!-- Site footer -->
+      <footer class="footer">
+        <p>© 2018</p>
+      </footer>
+
+    </div> 
+
+
+</form>
+
+</body>
+</html>
+ <script type="text/javascript">
+     var init={}   
+      $("#problems").on("change",function(){
+        // 设置select的联动
+        var currentValue=$(this).val()
+         $('#hosts').val('').trigger('change');  
+                  var option = "";  
+                  for (var i in init[currentValue]) {  
+                    console.log(i)
+                          option += '<option value="' + init[currentValue][i]["hostid"] + '"  >' + init[currentValue][i]["name"] + '</option>';  
+                  }  
+                  $("#hosts").append(option)
+      })
+    //页面加载运行，将数据集绑定select，显示默认选中学校 
+        $(function () {  
+            bindSelect(); 
+        });   
+        bindSelect = function () {  
+            var $problems = $('#problems');   
+            $.ajax({  
+              // 初始化数据
+                url:"/init",  
+                type:"get",  
+                // data是thetable的值,忘了为啥是这么写,反正是这么写!
+                data:$("#thetable").serialize(),  
+                cache: false,  
+                processData: false,  
+                contentType: false,  
+                success:function(data){
+                  data=JSON.parse(data)
+                  // console.log(data)
+                  if (!$.isEmptyObject(data)) { 
+                    // 动态生成select中的所有选项
+                    init=data
+                      for (var i in data) {  
+                        // console.log(i)
+                              $problems.append('<option value="' + i+ '">' + i + '</option>');  
+                      }  
+                  } 
+                },  
+                error:function(e){  alert("网络错误，请重试！！");  }  
+                });         
+        }  
+    </script>  
