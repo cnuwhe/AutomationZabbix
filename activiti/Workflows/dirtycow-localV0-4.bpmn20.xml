@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="dirtycow-local" name="dirtycow-local" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <serviceTask id="servicetask1" name="TurnOffCheckSum" activiti:class="CustomService.itemupdate">
+      <extensionElements>
+        <activiti:field name="param1">
+          <activiti:string><![CDATA[1]]></activiti:string>
+        </activiti:field>
+        <activiti:field name="param2">
+          <activiti:expression><![CDATA[${item1}]]></activiti:expression>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="servicetask2" name="insmod" activiti:class="CustomService.executeScript">
+      <extensionElements>
+        <activiti:field name="param1">
+          <activiti:string><![CDATA[6]]></activiti:string>
+        </activiti:field>
+        <activiti:field name="param2">
+          <activiti:expression><![CDATA[${hostid}]]></activiti:expression>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <userTask id="usertask1" name="User Task" activiti:assignee="zabbix">
+      <extensionElements>
+        <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="servicetask3" name="rmmod" activiti:class="CustomService.executeScript">
+      <extensionElements>
+        <activiti:field name="param1">
+          <activiti:string><![CDATA[7]]></activiti:string>
+        </activiti:field>
+        <activiti:field name="param2">
+          <activiti:expression><![CDATA[${hostid}]]></activiti:expression>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="servicetask4" name="TurnOnCheckSum" activiti:class="CustomService.itemupdate">
+      <extensionElements>
+        <activiti:field name="param1">
+          <activiti:string><![CDATA[0]]></activiti:string>
+        </activiti:field>
+        <activiti:field name="param2">
+          <activiti:expression><![CDATA[${item1}]]></activiti:expression>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <boundaryEvent id="boundarytimer1" name="Timer" attachedToRef="usertask1" cancelActivity="true">
+      <timerEventDefinition>
+        <timeDuration>PT10M</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
+    <endEvent id="endevent2" name="End"></endEvent>
+    <sequenceFlow id="flow2" sourceRef="servicetask1" targetRef="servicetask2"></sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="servicetask3" targetRef="servicetask4"></sequenceFlow>
+    <sequenceFlow id="flow9" sourceRef="boundarytimer1" targetRef="servicetask3"></sequenceFlow>
+    <serviceTask id="sid-514F0F58-471F-475C-9445-9C8A3EC785FC" name="cp" activiti:class="CustomService.executeScript">
+      <extensionElements>
+        <activiti:field name="param1">
+          <activiti:string><![CDATA[8]]></activiti:string>
+        </activiti:field>
+        <activiti:field name="param2">
+          <activiti:expression><![CDATA[${hostid}]]></activiti:expression>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-B81F8297-4E73-4686-95D7-4C32F0B8EFF8" sourceRef="sid-514F0F58-471F-475C-9445-9C8A3EC785FC" targetRef="usertask1"></sequenceFlow>
+    <serviceTask id="sid-40E4609A-0796-403B-8B34-EAF7BA67E677" name="badend" activiti:class="CustomService.executeScript">
+      <extensionElements>
+        <activiti:field name="param1">
+          <activiti:string><![CDATA[10]]></activiti:string>
+        </activiti:field>
+        <activiti:field name="param2">
+          <activiti:expression><![CDATA[${hostid}]]></activiti:expression>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="sid-96C25DCC-2DFF-400E-8842-83540EDEAA1C" name="goodend" activiti:class="CustomService.executeScript">
+      <extensionElements>
+        <activiti:field name="param1">
+          <activiti:string><![CDATA[9]]></activiti:string>
+        </activiti:field>
+        <activiti:field name="param2">
+          <activiti:expression><![CDATA[${hostid}]]></activiti:expression>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-DE4EF916-4E1B-46E5-9672-8F11163B43C3" sourceRef="usertask1" targetRef="sid-40E4609A-0796-403B-8B34-EAF7BA67E677"></sequenceFlow>
+    <sequenceFlow id="sid-816EAACF-2414-41DD-9FB8-2ADF0452A1B1" sourceRef="servicetask4" targetRef="sid-96C25DCC-2DFF-400E-8842-83540EDEAA1C"></sequenceFlow>
+    <sequenceFlow id="sid-43A9D3A9-80C9-4199-8DF9-CAC369FD7CDC" sourceRef="sid-96C25DCC-2DFF-400E-8842-83540EDEAA1C" targetRef="endevent1"></sequenceFlow>
+    <sequenceFlow id="sid-EB7FDD2F-7AD0-4510-9AFF-552C194D70B4" sourceRef="sid-40E4609A-0796-403B-8B34-EAF7BA67E677" targetRef="endevent2"></sequenceFlow>
+    <sequenceFlow id="sid-F41AAEA1-D2AD-4DF4-B813-2A710E704222" sourceRef="servicetask2" targetRef="sid-514F0F58-471F-475C-9445-9C8A3EC785FC"></sequenceFlow>
+    <userTask id="webconfirm" name="WebConfirm" activiti:assignee="admin">
+      <extensionElements>
+        <modeler:activiti-idm-assignee xmlns:modeler="http://activiti.com/modeler"><![CDATA[true]]></modeler:activiti-idm-assignee>
+        <modeler:assignee-info-email xmlns:modeler="http://activiti.com/modeler"><![CDATA[admin]]></modeler:assignee-info-email>
+        <modeler:assignee-info-lastname xmlns:modeler="http://activiti.com/modeler"><![CDATA[Administrator]]></modeler:assignee-info-lastname>
+        <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-9D85A1E5-CCB3-4FD4-89C9-B293436C2CE0" sourceRef="startevent1" targetRef="webconfirm"></sequenceFlow>
+    <endEvent id="sid-6FDC3D22-99DB-4FB7-8A86-6A8E9549180E"></endEvent>
+    <sequenceFlow id="sid-1C78D947-6BE4-4052-9763-55BF7FCEEDF6" name="cancel" sourceRef="webconfirm" targetRef="sid-6FDC3D22-99DB-4FB7-8A86-6A8E9549180E">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='0'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-E2179FD2-F572-4CCF-A2B2-8B7C269EEF51" name="confirm" sourceRef="webconfirm" targetRef="servicetask1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${result=='1'}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_dirtycow-local">
+    <bpmndi:BPMNPlane bpmnElement="dirtycow-local" id="BPMNPlane_dirtycow-local">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="230.0" y="177.5"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="28.0" width="28.0" x="1035.0" y="544.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask1" id="BPMNShape_servicetask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="420.0" y="285.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="600.0" y="285.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="825.0" y="165.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask3" id="BPMNShape_servicetask3">
+        <omgdc:Bounds height="55.0" width="105.0" x="996.5" y="165.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="servicetask4" id="BPMNShape_servicetask4">
+        <omgdc:Bounds height="55.0" width="105.0" x="996.5" y="270.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="boundarytimer1" id="BPMNShape_boundarytimer1">
+        <omgdc:Bounds height="31.0" width="31.0" x="915.4387336441847" y="180.56258224294564"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent2" id="BPMNShape_endevent2">
+        <omgdc:Bounds height="28.0" width="28.0" x="863.5" y="544.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-514F0F58-471F-475C-9445-9C8A3EC785FC" id="BPMNShape_sid-514F0F58-471F-475C-9445-9C8A3EC785FC">
+        <omgdc:Bounds height="55.0" width="105.0" x="600.0" y="165.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-40E4609A-0796-403B-8B34-EAF7BA67E677" id="BPMNShape_sid-40E4609A-0796-403B-8B34-EAF7BA67E677">
+        <omgdc:Bounds height="55.0" width="105.0" x="825.0" y="394.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-96C25DCC-2DFF-400E-8842-83540EDEAA1C" id="BPMNShape_sid-96C25DCC-2DFF-400E-8842-83540EDEAA1C">
+        <omgdc:Bounds height="55.0" width="105.0" x="996.5" y="394.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="webconfirm" id="BPMNShape_webconfirm">
+        <omgdc:Bounds height="80.0" width="100.0" x="195.0" y="272.5"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-6FDC3D22-99DB-4FB7-8A86-6A8E9549180E" id="BPMNShape_sid-6FDC3D22-99DB-4FB7-8A86-6A8E9549180E">
+        <omgdc:Bounds height="28.0" width="28.0" x="231.0" y="438.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-E2179FD2-F572-4CCF-A2B2-8B7C269EEF51" id="BPMNEdge_sid-E2179FD2-F572-4CCF-A2B2-8B7C269EEF51">
+        <omgdi:waypoint x="295.0" y="312.5"></omgdi:waypoint>
+        <omgdi:waypoint x="420.0" y="312.5"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-43A9D3A9-80C9-4199-8DF9-CAC369FD7CDC" id="BPMNEdge_sid-43A9D3A9-80C9-4199-8DF9-CAC369FD7CDC">
+        <omgdi:waypoint x="1049.0" y="449.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1049.0" y="544.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="525.0" y="312.5"></omgdi:waypoint>
+        <omgdi:waypoint x="600.0" y="312.5"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-DE4EF916-4E1B-46E5-9672-8F11163B43C3" id="BPMNEdge_sid-DE4EF916-4E1B-46E5-9672-8F11163B43C3">
+        <omgdi:waypoint x="877.5" y="220.0"></omgdi:waypoint>
+        <omgdi:waypoint x="877.5" y="394.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-EB7FDD2F-7AD0-4510-9AFF-552C194D70B4" id="BPMNEdge_sid-EB7FDD2F-7AD0-4510-9AFF-552C194D70B4">
+        <omgdi:waypoint x="877.5" y="449.0"></omgdi:waypoint>
+        <omgdi:waypoint x="877.5" y="544.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-9D85A1E5-CCB3-4FD4-89C9-B293436C2CE0" id="BPMNEdge_sid-9D85A1E5-CCB3-4FD4-89C9-B293436C2CE0">
+        <omgdi:waypoint x="245.0" y="207.5"></omgdi:waypoint>
+        <omgdi:waypoint x="245.0" y="272.5"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-B81F8297-4E73-4686-95D7-4C32F0B8EFF8" id="BPMNEdge_sid-B81F8297-4E73-4686-95D7-4C32F0B8EFF8">
+        <omgdi:waypoint x="705.0" y="192.5"></omgdi:waypoint>
+        <omgdi:waypoint x="825.0" y="192.5"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="1049.0" y="220.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1049.0" y="270.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F41AAEA1-D2AD-4DF4-B813-2A710E704222" id="BPMNEdge_sid-F41AAEA1-D2AD-4DF4-B813-2A710E704222">
+        <omgdi:waypoint x="652.5" y="285.0"></omgdi:waypoint>
+        <omgdi:waypoint x="652.5" y="220.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="946.4387336441847" y="196.06258224294564"></omgdi:waypoint>
+        <omgdi:waypoint x="971.4693668220923" y="196.06258224294564"></omgdi:waypoint>
+        <omgdi:waypoint x="971.4693668220923" y="192.5"></omgdi:waypoint>
+        <omgdi:waypoint x="996.5" y="192.5"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-816EAACF-2414-41DD-9FB8-2ADF0452A1B1" id="BPMNEdge_sid-816EAACF-2414-41DD-9FB8-2ADF0452A1B1">
+        <omgdi:waypoint x="1049.0" y="325.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1049.0" y="394.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-1C78D947-6BE4-4052-9763-55BF7FCEEDF6" id="BPMNEdge_sid-1C78D947-6BE4-4052-9763-55BF7FCEEDF6">
+        <omgdi:waypoint x="245.0" y="352.5"></omgdi:waypoint>
+        <omgdi:waypoint x="245.0" y="438.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
