@@ -57,11 +57,11 @@ if __name__ == '__main__':
     # 用来携带一些参数。参数包括hostid，和工作流中需要使用的itemid等。
     hostid = gethostid(sys.argv[3])
     start["variables"].append({"name": "hostid", "value": str(hostid)})
-    i = 1
-    for each in updateflag(hostid, sys.argv[4])[0].split(":"):
-        # 把itemid当作参数带入到工作流中
-        start["variables"].append({"name": "item" + str(i), "value": each})
-        i = i + 1
+    # i = 1
+    # for each in updateflag(hostid, sys.argv[4])[0].split(":"):
+    #     # 把itemid当作参数带入到工作流中
+    #     start["variables"].append({"name": "item" + str(i), "value": each})
+    #     i = i + 1
     password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
     password_mgr.add_password(None, ActivitiUrl, 'admin', 'test')
     handler = urllib.request.HTTPBasicAuthHandler(password_mgr)

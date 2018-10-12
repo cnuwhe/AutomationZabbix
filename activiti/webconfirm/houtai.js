@@ -11,11 +11,10 @@ var util=require('util')
 var pool = mysql.createPool({
   host     : 'localhost',
   user     : 'root',
-  password : 'user',
+  password : 'wh596100',
   database : 'exploitAudit'
 });
 var fs = require('fs');
-// 使用session
 app.use(session({
     secret: '1122334455', //secret的值建议使用随机字符串
     cookie: {maxAge: 60 * 1000}, // 过期时间（毫秒）
@@ -27,8 +26,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 访问这个页面的时候发送这个html
 
 function exeSql(line){
-  // 为了让异步的nodejs同步。这么写。resole是正常返回的结果，reject是错误的返回结果。
-  // 这个函数执行一个sql语句
   return new Promise((resole,reject) => {
     pool.getConnection((err,connection) => {
       if (err){
@@ -39,15 +36,16 @@ function exeSql(line){
         if (err){
           reject(err)
         }
-        // console.log(results)
-        resole(JSON.parse((JSON.stringify(results))))
+        try{
+          resole(JSON.parse((JSON.stringify(results))))
+        }
+        catch(err){}
       })
     })
   })
 }
-// async一定要有，才能使用带promise的函数
+
 async function initinfo(req,res){
-  // 读取每个表格，以及每个表格中需要人工授权的host
   var hosts=new Object()
   results = await exeSql('show tables')
   for (each in results){
@@ -58,11 +56,10 @@ async function initinfo(req,res){
   // console.log(hosts)
   res.send(JSON.stringify(hosts))
 }
-// 提供初始化的数据
 app.get('/init', function (req,res){
   initinfo(req, res)
 })
-// 获取所有的task
+
 function GetListOfTasks(){
   return new Promise((resole,reject)=>{
     request("http://127.0.0.1:8080/activiti-rest/service/runtime/tasks",function(error,response,body){
@@ -70,15 +67,14 @@ function GetListOfTasks(){
     }).auth("admin","test")
   })
 }
-
 async function completework(status,problems,hosts){
-  // 先获得所有的task
 	var tasks=await GetListOfTasks()
-  // 设置好相关参数，result决定了工作流的走向
+  // console.log(status,problems,hosts)
+  var update=await exeSql(util.format("update %s set flag=0 where hostid=%s ",problems,hosts))
 	var params={"action":"complete","variables":[{"name":"result","value":status}]}
 	for( i in tasks["data"]){
 		if (tasks["data"][i]["assignee"]=="admin"){
-			// 确定身份，发送授权的结果
+			// console.log(params)
 				var aaa=request({
 			    url: tasks["data"][i]["url"],
 			    method: "POST",
@@ -92,26 +88,98 @@ async function completework(status,problems,hosts){
 			    }); 
       }
 		}
-    // 恢复flag
-  var update=await exeSql(util.format("update %s set flag=0 where hostid=%s ",problems,hosts))
 	}
-	
 
-// 这个是用来跳转网页，并记录当时的problems，和host
-app.get('/todetail', function (req,res){
-  req.session.problems=req.param("problems")
-  req.session.hosts=req.param("hosts")
-  res.redirect(301,"/detail.html")
+app.get('/endWorkFlow', function (req,res){
+  endWorkFlow()
+  res.send("success")
 })
 
+async function endWorkFlow(){
+  var tasks=await GetListOfTasks()
+  var params={"action":"complete"}
+  for( i in tasks["data"]){
+    if (tasks["data"][i]["assignee"]=="admin"){
+        var aaa=request({
+          url: tasks["data"][i]["url"],
+          method: "POST",
+          headers: {"content-type": "application/json",},
+          auth:{
+          'user': 'admin',
+          'pass': 'test',
+          'sendImmediately': false},
+          body: JSON.stringify(params)},function(err,req,body){
+            console.log(body)
+          }); 
+      }
+    }
+  }
+
+function zabbixlogin()
+{return new Promise((resole,reject)=>{
+     var data={"jsonrpc": "2.0",
+        "method": "user.login",  
+        "params": {
+            "user": "Admin",
+            "password": "wh596100"
+        },
+        "id": 10 }
+
+     var aaa=request({
+          url: "http://127.0.0.1/zabbix/api_jsonrpc.php",
+          method: "POST",
+          headers: {"content-type": "application/json",},
+          body: JSON.stringify(data)},function(err,req,body){
+               if(err){reject(err)}
+            resole(JSON.parse(body)["result"])
+          }); 
+
+})}
+function reporter(token,hostid){
+     return new Promise((resole,reject)=>{
+var data={"jsonrpc": "2.0",
+        "method": "script.execute",  
+        "params": {
+            "scriptid": "11",
+            "hostid": hostid
+        },
+        "id": 10,
+        "auth": token}
+var aaa=request({
+          url: "http://127.0.0.1/zabbix/api_jsonrpc.php",
+          method: "POST",
+          headers: {"content-type": "application/json",},
+          body: JSON.stringify(data)},function(err,req,body){
+               if(err){reject(err)}
+            resole(JSON.parse(body)["result"])
+          }); 
+     })}
+async function report(hostid,res){
+     var token=await zabbixlogin()
+     var result=await reporter(token,hostid)
+     res.send(JSON.stringify(result))
+}
+
+
+app.get('/todetail', function (req,res){
+  // console.log(req.querys.problems)
+  req.session.problems=req.query.problems
+  req.session.hosts=req.query.hosts
+  res.redirect(302,"/detail.html")
+})
 function sendinfo(res,response){
   // 发送数据
+  // console.log(response)
   res.send(response)
 }
-// 用户对于授权的结果处理函数
 app.get('/sendconfirm', function (req,res){
+  // console.log(req.query.status,req.session.problems,req.session.hosts)
   completework(req.query.status,req.session.problems,req.session.hosts)
   res.send("success")
+})
+app.get('/report', function (req,res){
+  console.log(req.query.hostid)
+  report(req.query.hostid,res)
 })
 
  // 设置监听的端口

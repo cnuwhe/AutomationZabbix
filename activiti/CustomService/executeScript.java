@@ -22,7 +22,7 @@ public class executeScript implements JavaDelegate{
 		object.put("id", 2);
 		JSONObject params=new JSONObject();
 		params.put("user", "Admin");
-		params.put("password", "wh596100");
+		params.put("password", "password");
 		object.put("params", params);
 		String loginJSON =object.toString();
 //		System.out.println(loginJSON);
@@ -115,6 +115,7 @@ public class executeScript implements JavaDelegate{
 	}
 
 	@Override
+	//这部分只能这么写。
 	public void execute(DelegateExecution arg0) {
 		String scriptid=(String)param1.getValue(arg0);
 		String hostid=(String)param2.getValue(arg0);

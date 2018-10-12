@@ -28,7 +28,7 @@ def senddata(access_token, user, subject, content):
 
     send_url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=' + access_token
     send_values = {
-        "touser": ["inforno","QiuPengFei"], # 企业号中的用户帐号，在zabbix用户Media中配置，如果配置不正常，将按部门发送。
+        "touser": ["inforno"], # 企业号中的用户帐号，在zabbix用户Media中配置，如果配置不正常，将按部门发送。
         "toparty": "1",  # 企业号中的部门id。
         "msgtype": "text",  # 消息类型。
         "agentid": "2",  # 企业号中的应用id。
