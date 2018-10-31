@@ -7,7 +7,7 @@
     <link rel="icon" href="#">
         <title>标题没想好系列</title>
 <body>
-  <!-- 本地使用jQuery -->
+	<!-- 这个是jquery的CDN引用,本地的不会 -->
 <script src="jquery.js"></script>
 <!-- <link href="musec.css" rel="stylesheet" type="text/css"> -->
     <!-- Bootstrap core CSS -->
@@ -21,11 +21,13 @@
       <div class="masthead">
         <h3 class="text-muted"><div style="text-transform: uppercase;">welcome page</div></h3>
       </div>
+
+
       <div class="row">
 	<div class="col-lg-6"></div>
 
       <div class="col-lg-6">
-<!-- action是推送到后台的某个地址 -->
+
       <form id="thetable" action="/todetail" >
       <input type="hidden" name="pf" value="rid">
 
@@ -46,7 +48,6 @@
       </table>
       <br/>
       <div style="width: 200px; margin:0 auto; ">
-        <!-- onclick提交表单中的所有的信息 -->
       <button type="button" class="btn btn-primary"  onclick="$('#thetable').submit()" >确定</button> 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <input type="reset" class="btn btn-danger" name="reset" value="Clear">
@@ -73,7 +74,6 @@
  <script type="text/javascript">
      var init={}   
       $("#problems").on("change",function(){
-        // 设置select的联动
         var currentValue=$(this).val()
          $('#hosts').val('').trigger('change');  
                   var option = "";  
@@ -90,7 +90,6 @@
         bindSelect = function () {  
             var $problems = $('#problems');   
             $.ajax({  
-              // 初始化数据
                 url:"/init",  
                 type:"get",  
                 // data是thetable的值,忘了为啥是这么写,反正是这么写!
@@ -102,7 +101,6 @@
                   data=JSON.parse(data)
                   // console.log(data)
                   if (!$.isEmptyObject(data)) { 
-                    // 动态生成select中的所有选项
                     init=data
                       for (var i in data) {  
                         // console.log(i)

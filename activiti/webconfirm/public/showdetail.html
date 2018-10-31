@@ -23,27 +23,19 @@
 
 
       <div class="row">
-	<div class="col-lg-6">
+	<div class="col-lg-6" id="context">
 
-<p>我们检测到该主机有关键文件内容变化
-</p>
-<p>如果选择授权活动则会对文件进行恢复，并开始检测dirtycow安全漏洞。如果选择否定授权则结束工作流。</p>
 	</div>
 
       <div class="col-lg-6">
-
-
       <div style="width: 200px; margin:0 auto; ">
-      <button type="button" class="btn btn-primary"  onclick="sendconfirm(1)" >确定授权</button> 
-      <button type="reset" class="btn btn-danger" onclick="sendconfirm(0)" >否定授权</button>
+      <button type="reset" class="btn btn-danger" onclick="sendconfirm()" >endWorkFlow</button>
+      <button type="button" class="btn btn-primary"  onclick="ShowReport()" >ShowReport</button> 
       <button type="button" class="btn btn-primary"  onclick="submitinfo()" >web shell</button>
       <button type="button" class="btn btn-primary"  onclick="submitinfo()" >LEP</button> 
       </div>
-
       </div>
       <div id="chartcontainer" style="min-width:400px;height:400px;"></div>
-
-
       <!-- Site footer -->
       <footer class="footer">
 <!--
@@ -51,28 +43,47 @@
 -->
         <p>© 2017</p>
       </footer>
-
     </div> 
-
-
 </form>
 
 </body>
 </html>
 <script type="text/javascript">
-  function sendconfirm(status){
-  // console.log(stat)
+  var hostid;
+  var uid;
+        $(function () {  
+            $("#context").append($("<p></p>").text(window.location.href.split("?")[1]))
+            hostid=window.location.href.split("?")[1].split("&")[0]
+            uid=window.location.href.split("?")[1].split("&")[1]
+            console.log(hostid)
+            console.log(uid)
+        });  
+  function sendconfirm(){
   $.ajax({  
-    url:"/sendconfirm",  
+    url:"/endWorkFlow",  
     type:"get",  
-    data:{"status":status},  
+    data:{},  
     cache: false,  
     processData: true,  
     contentType: false,  
-    success:function(){alert("success");},  
+    success:function(){alert("end");},  
     error:function(e){  alert("网络错误，请重试！！");  }  
     });  
   }
+function ShowReport(){
+    $.ajax({  
+    url:"/report",  
+    type:"get",  
+    data:{"hostid":hostid},  
+    cache: false,  
+    processData: true,  
+    contentType: false,  
+    success:function(data){
+      $("#chartcontainer").append($("<p></p>").text(data))
+    },  
+    error:function(e){  alert("网络错误，请重试！！");  }  
+    });  
+}
 </script> 
 
 

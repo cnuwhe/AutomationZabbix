@@ -11,7 +11,7 @@ var util=require('util')
 var pool = mysql.createPool({
   host     : 'localhost',
   user     : 'root',
-  password : 'wh596100',
+  password : 'password',
   database : 'exploitAudit'
 });
 var fs = require('fs');
